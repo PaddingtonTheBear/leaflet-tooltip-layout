@@ -4,7 +4,7 @@ This plugin is designed to avoid tooltip overlapping and make users find out the
 
 [Here is the demo](https://zijingpeng.github.io/overlapping-avoided-tooltip/)
 
-**FORKED** From the original, https://github.com/ZijingPeng/leaflet-tooltip-layout, with a reworked TypeScript / Rxjs version of the main tooltip layout functionality. 
+**FORKED** From the [original](https://github.com/ZijingPeng/leaflet-tooltip-layout), with a reworked TypeScript / Rxjs version of the main tooltip layout functionality. 
 
 - Changed the flow of using the plugin so that you first create the LeafletTooltipLayout class
   - Added an option to the constructor, `{useInternalEvents: boolean}` to disable the internal map events  if you plan on adding your own for determining tooltip visibility; improves performance
