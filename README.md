@@ -4,51 +4,65 @@ This plugin is designed to avoid tooltip overlapping and make users find out the
 
 [Here is the demo](https://zijingpeng.github.io/overlapping-avoided-tooltip/)
 
+**FORKED** From the original, https://github.com/ZijingPeng/leaflet-tooltip-layout, with a reworked TypeScript / Rxjs version of the main tooltip layout functionality. 
+
+- Changed the flow of using the plugin so that you first create the LeafletTooltipLayout class
+  - Added an option to the constructor, `{useInternalEvents: boolean}` to disable the internal map events  if you plan on adding your own for determining tooltip visibility; improves performance
+- Changed how markers are added and removed from TooltipLayout
+  - `resetMarker` now takes an optional "show" parameter which allows you to control if a marker is added to the map, useful if you are limiting the number of markers on the map for performance and visibility reasons
+  - Added a `removeAllMakers` method which will remove all polylines, set the visibility of all tooltips to hidden, and empty the markerList array
+  - `setMarkers(arr)` method will fire the resetMarker method for every marker in the `arr` array
+- Utilizes *RxJS* for `debounceTime` capability to improve performance on map
+  - Waits `333ms` before firing `redrawLines` or `removeAllPolyline` and will cancel previous requests until events are stopped firing. Improves performance so that these expensive redrawing methods aren't constantly fired on map move / zooms.
+  - Internally uses `Subjects` for `redrawLines` and `removeAllPolyline` to call internal versions of these methods.
 
 
 ## Installation
 
-```shell
-npm i leaflet-tooltip-layout --save
-# or
-yarn add leaflet-tooltip-layout
-```
-
-Or you can just copy `./lib/index.js` to your project and rename it to what you want.
-
+You can just copy `./leaflet.tooltip.layout.ts` to your project and rename it to what you want, assuming you have TypeScript transpilation in your project (or use Angular).
 
 
 ## Getting Started
 
-### *ES6*
+### *ES6 / TS*
 
 ```js
-import * as tooltipLayout from 'leaflet-tooltip-layout';
-// or
-import { resetMarker, getMarkers, getLine, initialize, getLine } from 'leaflet-tooltip-layout';
+import 'leaflet';
+import { LeafletTooltipLayout } from './leaflet.tooltip.layout';
 ```
 
+## Example
 
+```ts
+const map = L.map('mapId', mapOptions);
 
-### *CommonJS*
+const tooltipLayout = new LeafletTooltipLayout({useInternalEvents: true});
+tooltipLayout.initialize(map);
 
-```js
-const tooltipLayout = require('leaflet-tooltip-layout');
+// Generate Markers 
+const markers = [];
+for (let i = 0; i < 100; i++) {
+  const marker = L.marker({})); // not fully implemented in this example, but it's standard Leaflet marker creation into an array.
+  markers.push(marker);
+  marker.addTo(map);
+}
+
+// Add all markers to map
+tooltipLayout.setMarkers(markers);
+
+// Hide all markers / remove from layout
+tooltipLayout.removeAllMarkers();
+
+// Toggle a marker's visibility
+const marker = markers[0];
+
+tooltipLayout.resetMarker(marker); // shows marker
+tooltipLayout.resetMarker(marker, false); // hides marker
 ```
-
-
-
-### *Browser*
-
-Make sure `leaflet` is imported before this plugin, and `window.L` is available
-
-```html
-<script type="text/javascript" src="/path/to/leaflet-tooltip-layout.js"></script>
-```
-
-
 
 ## API Reference
+
+### OLD REFERENCES
 
 1. `L.tooltipLayout.resetMarker(marker)`
 
@@ -103,23 +117,6 @@ Make sure `leaflet` is imported before this plugin, and `window.L` is available
      })
    }
    ```
-
-
-
-## Build Guide
-
-```shell
-git clone git@github.com:ZijingPeng/leaflet-tooltip-layout.git
-cd ./leaflet-tooltip-layout
-
-npm i # install dependencies
-npm run build # build lib & example
-
-# or
-npm run serve # enter dev zone
-```
-
-
 
 ## License
 
