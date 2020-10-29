@@ -19,7 +19,7 @@ This plugin is designed to avoid tooltip overlapping and make users find out the
 
 ## Installation
 
-You can just copy `./leaflet.tooltip.layout.ts` to your project and rename it to what you want, assuming you have TypeScript transpilation in your project (or use Angular).
+You can just copy `./lib/leaflet.tooltip.layout.ts` to your project and rename it to what you want, assuming you have TypeScript transpilation in your project (or use Angular).
 
 
 ## Getting Started
